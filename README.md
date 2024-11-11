@@ -1,2 +1,2 @@
-# circular_x_means
+# circular_clustering
 Adaptation of X means algorithm for circular data
