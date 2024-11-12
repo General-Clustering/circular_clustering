@@ -18,7 +18,8 @@ To invoke the class use:
 
     circXmeans = CircularXMeansQuantiles(x, kmax=8, confidence=0.99, use_optimal_k_means=True)
 
-Note that `kmax=` will fix the maximun number of clusters desired.
+- Notice that **x will be asumed to be a one dimensional numpy array of floats between `-2*np.pi` and `2*np.pi`**
+- Note that `kmax=` will fix the maximun number of clusters desired.
 
 To fit the algorithm:
 
