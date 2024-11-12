@@ -1,3 +1,9 @@
+circular_clustering.egg-info
+build
+dist
+venv
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
