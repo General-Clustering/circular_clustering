@@ -1,17 +1,3 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
-
-[project]
-name = "circular_clustering"
-authors = [
-    {name = "Hugo J. Bello", email = "hjbello.wk@protonmail.com"}
-]
-description = "Adaptation of X means algorithm for circular data"
-version = "0.0.4"
-readme = "README.md"
-requires-python = ">=3.7"
-dependencies = [
-    "numpy",
-    "scipy","matplotlib"
-]
