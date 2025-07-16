@@ -2,7 +2,7 @@ import numpy as np
 from circular_clustering.cylindrical_k_means import CylindricalKMeans
 from circular_clustering.cylindrical_hdr import CylindricalHDR
 
-class XMeansHDR:
+class CylindricalXMeansHDR:
     def __init__(self, X, kmax=20, confidence=0.99, random_state=None):
         self.X = np.asarray(X)
         self.KMax = kmax

@@ -64,66 +64,66 @@ for cl in circXmeans.cluster_points:
 
 plt.show()
 ```
+![result](./doc/clusters_example.png)
+
 
 ---
 
 ## Cylindrical clustering with HDR-based XMeans
 
-The `XMeansHDR` class supports clustering in cylindrical coordinates, where data has both an angular and linear component (θ, y). Clustering is performed using HDR-based region separation and a custom cylindrical distance metric.
+The `CylindricalXMeansHDR` class supports clustering in cylindrical coordinates, where data has both an angular and linear component (θ, y). Clustering is performed using HDR-based region separation and a custom cylindrical distance metric.
 
 To import:
 
 ```python
-from circular_clustering.cylindrical_hdr_x_means import XMeansHDR
+from circular_clustering import CylindricalXMeansHDR
 ```
 
 ### Example (cylindrical data):
 
 ```python
+
 import numpy as np
 import matplotlib.pyplot as plt
-from circular_clustering import XMeansHDR
+from circular_clustering.cylindrical_hdr_x_means import CylindricalXMeansHDR
 
-def make_cluster(center_theta, center_y, spread_theta, spread_y, n):
-    angles = np.random.vonmises(center_theta, 1 / (spread_theta ** 2), size=n)
-    heights = np.random.normal(center_y, spread_y, size=n)
-    return np.column_stack([angles, heights])
+# Fix seed for reproducibility
+np.random.seed(42)
 
-# Simulation data
-np.random.seed(123)
-true_k = 4
-points_per_cluster = 200
-spread_theta = 0.25
-spread_y = 0.4
-alpha = 0.1
-confidence = 1 - alpha
+# Function to create elliptical clusters on the cylinder
+def make_cluster(center_theta, center_y, spread_theta, spread_y, n=100):
+    theta = np.random.vonmises(center_theta, 1 / (spread_theta ** 2), size=n)
+    y = np.random.normal(center_y, spread_y, size=n)
+    return np.column_stack([theta, y])
 
-centers_theta = np.random.uniform(-np.pi, np.pi, true_k)
-centers_y = np.random.uniform(-3, 3, true_k)
+# One cluster near -π, one near π, one at 0
+X = np.vstack([
+    make_cluster(np.pi - 0.2, 0.5, 0.15, 0.2),     # Cluster near +π
+    make_cluster(-np.pi + 0.2, -0.5, 0.15, 0.2),   # Cluster near -π (should wrap!)
+    make_cluster(0.0, 1.5, 0.2, 0.2),              # Central cluster
+])
 
-clusters = [
-    make_cluster(c_theta, c_y, spread_theta, spread_y, points_per_cluster)
-    for c_theta, c_y in zip(centers_theta, centers_y)
-]
-X = np.vstack(clusters)
-
-# Fit HDR XMeans
-xmeans = XMeansHDR(X, kmax=6, confidence=confidence)
+# Run HDR-based X-Means clustering
+alpha = 0.3
+xmeans = CylindricalXMeansHDR(X, kmax=6, confidence=1 - alpha, random_state=0)
 xmeans.fit()
+print(f"Found clusters: {xmeans.k}")
 
-# Plot result
+# Plot results
 colors = plt.cm.tab10.colors
 plt.figure(figsize=(8, 6))
 for i in range(xmeans.k):
-    cluster_points = X[xmeans.labels == i]
-    plt.scatter(cluster_points[:, 0], cluster_points[:, 1],
-                color=colors[i % 10], alpha=0.6, label=f"Cluster {i}")
+    cluster = X[xmeans.labels == i]
+    plt.scatter(cluster[:, 0], cluster[:, 1], color=colors[i % 10], alpha=0.6, s=20, label=f"Cluster {i}")
 
+plt.title(f"CylindricalXMeansHDR clustering (wraparound test)\nFound {xmeans.k} clusters")
 plt.xlabel("Angle θ (radians)")
 plt.ylabel("Height y")
-plt.title(f"Cylindrical XMeans Clustering\nTrue: {true_k}, Found: {xmeans.k}")
+plt.xlim(-np.pi, np.pi)
 plt.grid(True)
 plt.legend()
+plt.tight_layout()
 plt.show()
 ```
 
+![result](./doc/clusters_example2.png)
