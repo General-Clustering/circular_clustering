@@ -14,6 +14,7 @@ class CylindricalXMeansHDR:
         X = self.X
 
         if X.shape[0] == 1:
+            print("only one point found, returning trivial clustering")
             self.labels = np.array([0])
             self.k = 1
             self.centroids = X.copy()
