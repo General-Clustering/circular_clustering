@@ -12,6 +12,14 @@ class CylindricalXMeansHDR:
     def fit(self):
         k = self.KMax
         X = self.X
+
+        if X.shape[0] == 1:
+            self.labels = np.array([0])
+            self.k = 1
+            self.centroids = X.copy()
+            self.cluster_points = [np.array([True])]
+            return self
+
         stop = False
 
         while not stop and k >= 1:
