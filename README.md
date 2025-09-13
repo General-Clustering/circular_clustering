@@ -126,4 +126,43 @@ plt.tight_layout()
 plt.show()
 ```
 
+
 ![result](./doc/clusters_example2.png)
+
+
+## Cylindrical data with HDR++ Merge
+
+```python
+from circular_clustering.cylindrical_hdrpp_merge import CylindricalKMeansPPHDRMerge
+
+# X: (n, 2) with columns (theta, z), theta in radians
+
+# 1) Manual init with explicit centers (theta0,z0), (theta1,z1), ...
+init_centers = np.array([
+    [0.0,  0.0],
+    [1.5,  2.0],
+    [-2.2, -1.0],
+])
+model = CylindricalKMeansPPHDRMerge(
+    X, kmax=10, confidence=0.95, init="manual", init_centers=init_centers
+).fit()
+
+# 2) Manual init from indices into X
+init_indices = np.array([3, 42, 105])
+model = CylindricalKMeansPPHDRMerge(
+    X, kmax=10, confidence=0.95, init="manual", init_indices=init_indices
+).fit()
+
+# 3) Random init (uniformly pick up to kmax rows of X)
+model = CylindricalKMeansPPHDRMerge(
+    X, kmax=10, confidence=0.95, init="random", random_state=0
+).fit()
+
+# 4) Default k-means++ seeding (original behaviour)
+model = CylindricalKMeansPPHDRMerge(
+    X, kmax=10, confidence=0.95, random_state=0
+).fit()
+
+
+```
+
